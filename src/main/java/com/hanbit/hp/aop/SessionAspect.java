@@ -3,6 +3,7 @@ package com.hanbit.hp.aop;
 import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -10,7 +11,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Aspect
 @Component
 public class SessionAspect {
-
+	
+	@Before("@annotation(com.hanbit.hp.annotation.SignInRequired")
 	public void checkSignedIn(){
 		ServletRequestAttributes requestAttributes = 
 				(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
