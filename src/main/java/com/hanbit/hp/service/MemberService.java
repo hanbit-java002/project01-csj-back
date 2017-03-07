@@ -8,14 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.hanbit.hp.controller.WelcomeController;
 import com.hanbit.hp.dao.MemberDAO;
 
 @Service
 public class MemberService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(WelcomeController.class);
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberService.class);
 
 	private static final String SECRET_KEY = "hanbit";
 	private PasswordEncoder passwordEncoder = new StandardPasswordEncoder(SECRET_KEY);
@@ -33,11 +34,13 @@ public class MemberService {
 		return key;
 	}
 	
+	@Transactional
 	public String addMember(String userId, String userPw) {
 		String uid = generateKey("UID");
 		String encryptedUserPw = passwordEncoder.encode(userPw);
 		
 		memberDAO.insertMember(uid, userId, encryptedUserPw);
+		memberDAO.insertMemberDetail(uid, "사용자");
 		
 		return uid;
 	}

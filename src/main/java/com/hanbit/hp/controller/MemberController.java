@@ -3,7 +3,6 @@ package com.hanbit.hp.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,12 +15,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hanbit.hp.annotation.SignInRequired;
 import com.hanbit.hp.service.MemberService;
 
 @Controller
 public class MemberController {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(WelcomeController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
 	
 	@Autowired
 	private MemberService memberService;
@@ -55,7 +55,8 @@ public class MemberController {
 		
 		try {
 			if (!memberService.isValidMember(userId, userPw)) {
-				LOGGER.warn("패스워드 틀림:" + userId + "/" + userPw );
+				LOGGER.warn("패스워드 틀림 : " + userId + " / " + userPw);
+				
 				throw new RuntimeException("패스워드가 다릅니다.");
 			}
 		}
@@ -95,14 +96,11 @@ public class MemberController {
 	
 	@RequestMapping(value="/api2/member/update", method=RequestMethod.POST)
 	@ResponseBody
+	@SignInRequired
 	public Map update(@RequestParam("userPw") String userPw,
 			HttpSession session) {
 		
 		String uid = (String) session.getAttribute("uid");
-		
-		if (StringUtils.isBlank(uid)) {
-			throw new RuntimeException("로그인이 필요합니다.");
-		}
 		
 		memberService.modifyMember(uid, userPw);
 		
