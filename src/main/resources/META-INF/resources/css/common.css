@@ -8,6 +8,10 @@ ul {
 	padding: 0;
 }
 
+.block {
+	display: block;
+}
+
 header {
 	position: fixed;
 	width: 100%;
@@ -79,6 +83,17 @@ header {
 	display: none;
 }
 
+.admin-list table>tbody>tr {
+	cursor: pointer;
+}
+
 .admin-buttons {
 	text-align: right;
 }
+
+
+
+
+
+
+
